@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Safou ❤️</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg1: #ffe1ec;
+      --bg2: #fff5f9;
+      --card: #ffffffdd;
+      --primary: #ff2f6d;
+      --primaryHover: #ff0f5a;
+      --text: #3a0f1f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+      font-family: "Segoe UI", system-ui, sans-serif;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .card {
+      max-width: 740px;
+      width: 100%;
+      background: var(--card);
+      border-radius: 26px;
+      padding: 34px 28px;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0,0,0,.2);
+      backdrop-filter: blur(12px);
+    }
+
+    .heart {
+      font-size: 60px;
+      animation: pulse 1.4s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 46px);
+      color: var(--text);
+      margin: 14px 0 10px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #6b1c36;
+      margin-bottom: 26px;
+      line-height: 1.6;
+    }
+
+    .button-zone {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      height: 150px;
+      margin: 0 auto;
+    }
+
+    button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 16px 28px;
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 12px 26px rgba(0,0,0,.16);
+      user-select: none;
+      transition: transform .12s ease, background .12s ease;
+    }
+
+    #yesBtn {
+      left: 18%;
+      background: var(--primary);
+      color: #fff;
+    }
+    #yesBtn:hover { background: var(--primaryHover); }
+
+    #noBtn {
+      left: 62%;
+      background: #e5e7eb;
+      color: #111;
+    }
+
+    .hint {
+      font-size: 13px;
+      margin-top: 10px;
+      opacity: .7;
+    }
+
+    .result {
+      display: none;
+      margin-top: 22px;
+      animation: pop .4s ease;
+    }
+
+    .result h2 {
+      font-size: clamp(30px, 4.5vw, 46px);
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .message {
+      font-size: 18px;
+      color: #4b1023;
+      line-height: 1.7;
+    }
+
+    @keyframes pop {
+      from { transform: scale(.94); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+
+<body>
+<canvas id="confettiCanvas"></canvas>
+
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_46c5d9c3c5.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+  <div class="heart">💖</div>
+
+  <h1>Safou, will you be my Valentine?</h1>
+
+  <p class="subtitle">
+    Every smile of yours feels like home.<br>
+    Every moment with you feels like magic ✨
+  </p>
+
+  <section class="button-zone" id="zone">
+    <button id="yesBtn">Yes 💘</button>
+    <button id="noBtn">No 🙈</button>
+  </section>
+
+  <div class="hint" id="hint">The “No” button doesn’t believe in destiny 😈</div>
+
+  <div class="result" id="result">
+    <h2>You chose us ❤️</h2>
+    <p class="message">
+      Safou,<br><br>
+      Loving you is my favorite feeling.<br>
+      I choose you today, tomorrow,<br>
+      and every Valentine after this one 🌹<br><br>
+      Thank you for being you.
+    </p>
+  </div>
+</div>
+
+<script>
+  const zone = document.getElementById("zone");
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const result = document.getElementById("result");
+  const hint = document.getElementById("hint");
+  const music = document.getElementById("music");
+
+  const canvas = document.getElementById("confettiCanvas");
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = innerWidth * dpr;
+    canvas.height = innerHeight * dpr;
+    canvas.style.width = "100vw";
+    canvas.style.height = "100vh";
+  }
+  resizeCanvas();
+  addEventListener("resize", resizeCanvas);
+
+  const confettiInstance = confetti.create(canvas, { resize: false });
+
+  function celebrate() {
+    const end = Date.now() + 1600;
+    (function frame() {
+      confettiInstance({
+        particleCount: 14,
+        spread: 90,
+        startVelocity: 45,
+        origin: { x: Math.random(), y: Math.random() * 0.4 }
+      });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+
+    setTimeout(() => {
+      confettiInstance({
+        particleCount: 280,
+        spread: 140,
+        startVelocity: 60,
+        origin: { x: 0.5, y: 0.6 }
+      });
+    }, 350);
+  }
+
+  let yesScale = 1;
+  function growYes() {
+    yesScale = Math.min(2.4, yesScale + 0.1);
+    yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
+  }
+
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function moveNo(px, py) {
+    const z = zone.getBoundingClientRect();
+    const b = noBtn.getBoundingClientRect();
+
+    let dx = (b.left + b.width / 2) - px;
+    let dy = (b.top + b.height / 2) - py;
+    let mag = Math.hypot(dx, dy) || 1;
+    dx /= mag;
+    dy /= mag;
+
+    let left = (b.left - z.left) + dx * 140;
+    let top  = (b.top - z.top) + dy * 140;
+
+    noBtn.style.left = clamp(left, 0, z.width - b.width) + "px";
+    noBtn.style.top  = clamp(top, 0, z.height - b.height) + "px";
+    noBtn.style.transform = "none";
+
+    growYes();
+  }
+
+  zone.addEventListener("pointermove", e => {
+    const b = noBtn.getBoundingClientRect();
+    const d = Math.hypot(
+      (b.left + b.width / 2) - e.clientX,
+      (b.top + b.height / 2) - e.clientY
+    );
+    if (d < 140) moveNo(e.clientX, e.clientY);
+  });
+
+  noBtn.addEventListener("click", e => e.preventDefault());
+
+  yesBtn.addEventListener("click", () => {
+    zone.style.display = "none";
+    hint.style.display = "none";
+    result.style.display = "block";
+    music.play();
+    resizeCanvas();
+    celebrate();
+  });
+</script>
+</body>
+</html>
